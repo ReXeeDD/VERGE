@@ -1,4 +1,5 @@
 #include"Application.h"
+#include"../Physics/Vec2.h"
 #include<iostream>
 #include<thread>
 #include<chrono>
@@ -12,10 +13,11 @@ namespace Verge {
 	}
 
 	void Application::Run() {
-		while (true) {
+		Vec2 v1{ 1.0f,2.0f };
+		Vec2 v2{ 1.0f,2.0f };
 
-			std::cout << "------Welcome to Verge Engine------\n";
-			std::this_thread::sleep_for(std::chrono::seconds(1));
-		}
+		std::cout << v1 + v2 << std::endl;
+		
+
 	}
 }
