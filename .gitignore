@@ -1,0 +1,15 @@
+# Visual Studio temporary files
+.vs/
+out/
+build/
+bin/
+*.user
+*.suo
+*.db
+
+# Compiled output
+*.exe
+*.obj
+*.pdb
+*.ilk
+*.lib
