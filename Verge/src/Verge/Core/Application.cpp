@@ -3,6 +3,7 @@
 #include<iostream>
 #include<thread>
 #include<chrono>
+#include"../Physics/RigidBody.h"
 namespace Verge {
 
 	Application::Application() {
@@ -13,11 +14,19 @@ namespace Verge {
 	}
 
 	void Application::Run() {
-		Vec2 v1{ 1.0f,2.0f };
-		Vec2 v2{ 1.0f,2.0f };
+		Vec2 p{ 0.0f, 0.0f };
+		Vec2 v{ 0.0f, 0.0f };
+		Vec2 a{ 0.0f, 0.0f };
+		Vec2 force{5.0f, 5.0f};
+		RigidBody body(p,v,a);
 
-		std::cout << v1 + v2 << std::endl;
-		
+		std::cout << "[POSITION]" << body.position << std::endl;
+
+		for (int i = 0; i < 5; ++i) {
+			body.ApplyForce(force);
+			body.Integrate(0.1f);
+			std::cout << "[POSITION]" << body.position << std::endl;
+		}
 
 	}
 }
