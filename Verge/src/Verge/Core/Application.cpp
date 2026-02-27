@@ -21,13 +21,23 @@ namespace Verge {
 		Vec2 v{ 0.0f, 0.0f };
 		float m = 15.0f;
 		
+		const double FIXED_TIMESTEP= 1.0 / 60.0;
+		auto lastTime = std::chrono::steady_clock::now();
+		double accumulator = 0;
 		RigidBody body(p,v,m);
 		PhysicsWorld a;
 		a.AddBody(body);
 		while (true) {
+			auto currentTime = std::chrono::steady_clock::now();
+			auto deltaTime = duration_cast<std::chrono::duration<double>>(currentTime - lastTime).count();
+			lastTime = currentTime;
+			accumulator += deltaTime;
+			while (accumulator >= FIXED_TIMESTEP) {
 
-		a.Step(0.1f);
-		std::this_thread::sleep_for(std::chrono::milliseconds(100));
+			a.Step(FIXED_TIMESTEP);
+			accumulator -= FIXED_TIMESTEP;
+			}
+			std::this_thread::sleep_for(std::chrono::milliseconds(100));
 		}
 		
 		
