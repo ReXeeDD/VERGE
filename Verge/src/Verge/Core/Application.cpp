@@ -4,6 +4,9 @@
 #include<thread>
 #include<chrono>
 #include"../Physics/RigidBody.h"
+#include"../Physics/PhysicsWorld.h"
+
+
 namespace Verge {
 
 	Application::Application() {
@@ -17,19 +20,22 @@ namespace Verge {
 		Vec2 p{ 0.0f, 0.0f };
 		Vec2 v{ 0.0f, 0.0f };
 		float m = 15.0f;
-		Vec2 force{5.0f, 5.0f};
+		
 		RigidBody body(p,v,m);
-		Vec2 gravity{ 0.0f, -9.81f };
+		PhysicsWorld a;
+		a.AddBody(body);
+		while (true) {
 
-		std::cout << "[POSITION]" << body.position << std::endl;
-
-		for (int i = 0; i < 5; ++i) {
-			body.ApplyForce(force);
-			body.ApplyForce(gravity * body.mass);
-			body.Integrate(0.1f);
-			
-			std::cout << "[POSITION]" << body.position << std::endl;
+		a.Step(0.1f);
+		std::this_thread::sleep_for(std::chrono::milliseconds(100));
 		}
+		
+		
+
+
+		
+
+		
 
 	}
 }
