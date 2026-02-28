@@ -9,6 +9,7 @@ public:
     Vec2 velocity;
     Vec2 forceAccum;
     float mass = 1.0f;
+    float restitution = 1.0f;
 
     RigidBody(Vec2 p, Vec2 v, float m);
 

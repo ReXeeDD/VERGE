@@ -10,6 +10,7 @@ void RigidBody::Integrate(float dt) {
     Vec2 acceleration = forceAccum / mass;
     velocity += acceleration * dt;
     position += velocity * dt;
+    
 
     forceAccum = Vec2::Zero();
 }

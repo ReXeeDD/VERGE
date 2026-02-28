@@ -14,7 +14,7 @@ struct Vec2 {
 	Vec2 operator-(const Vec2& other)const {
 		return { x - other.x,y - other.y };
 	}
-	Vec2 operator*( float& scalar) const{
+	Vec2 operator*( float scalar) const{
 		return { x * scalar, y * scalar };
 	}
     Vec2 operator/(float scalar) const

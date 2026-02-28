@@ -23,10 +23,10 @@ namespace Verge {
 #define ZH_CORE_ERROR(...) ::Verge::Log::GetCoreLogger()->error(__VA_ARGS__)
 #define ZH_CORE_INFO(...)  ::Verge::Log::GetCoreLogger()->info(__VA_ARGS__)
 #define ZH_CORE_WARN(...)  ::Verge::Log::GetCoreLogger()->warn(__VA_ARGS__)
-#define ZH_CORE_FATAl(...)  ::Verge::Log::GetCoreLogger()->fatal(__VA_ARGS__)
+#define ZH_CORE_FATAL(...)  ::Verge::Log::GetCoreLogger()->fatal(__VA_ARGS__)
 
 //Client Logger macros
 #define ZH_ERROR(...) ::Verge::Log::GetClientLogger()->error(__VA_ARGS__)
 #define ZH_INFO(...)  ::Verge::Log::GetClientLogger()->info(__VA_ARGS__)
 #define ZH_WARN(...)  ::Verge::Log::GetClientLogger()->warn(__VA_ARGS__)
-#define ZH_FATAl(...)  ::Verge::Log::GetClientLogger()->fatal(__VA_ARGS__)
+#define ZH_FATAL(...)  ::Verge::Log::GetClientLogger()->fatal(__VA_ARGS__)

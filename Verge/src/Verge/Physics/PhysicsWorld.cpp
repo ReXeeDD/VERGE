@@ -10,6 +10,11 @@ void PhysicsWorld::Step(float dt) {
 	i.ApplyForce(force);
 	i.ApplyForce(gravity * i.mass);
 	i.Integrate(dt);
+	if (i.position.y <= 0) {
+
+		i.position.y = 0;
+		i.velocity.y = -i.velocity.y *i.restitution;
+	}
 	std::cout << "[POSITION]" << i.position << std::endl;
 
 	}
