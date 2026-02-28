@@ -6,7 +6,8 @@ class PhysicsWorld {
 private:
 	std::vector<RigidBody> bodies;
 	Vec2 gravity{ 0.0f, -9.81f };
-	Vec2 force{ 5.0f, 5.0f };
+	Vec2 force{ 0.0f, 0.0f };
+	float torque = 1.0f;
 
 public:
 	void AddBody(const RigidBody& body);

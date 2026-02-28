@@ -20,11 +20,12 @@ namespace Verge {
 		Vec2 p{ 0.0f, 10.0f };
 		Vec2 v{ 0.0f, 0.0f };
 		float m = 15.0f;
+		float r = 1.0f;
 		
 		const double FIXED_TIMESTEP= 1.0 / 60.0;
 		auto lastTime = std::chrono::steady_clock::now();
 		double accumulator = 0;
-		RigidBody body(p,v,m);
+		RigidBody body(p,v,m,r);
 		PhysicsWorld a;
 		a.AddBody(body);
 		while (true) {
