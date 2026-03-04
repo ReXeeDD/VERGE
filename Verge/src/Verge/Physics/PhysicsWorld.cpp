@@ -1,7 +1,6 @@
 #include "Physicsworld.h"
 #include<iostream>
 #include<algorithm>
-static int flag = 0;
 void PhysicsWorld::AddBody(const RigidBody& body) {
 	bodies.push_back(body);
 }
@@ -10,16 +9,21 @@ void PhysicsWorld::Step(float dt) {
 	for (auto& i : bodies) {
 
 	i.ApplyForce(gravity * i.mass);
-    if (flag == 0){
-    i.ApplyForce(force);
-    flag++;
+    i.IntegrateVelocity(dt);
+    i.IntegratePosition(dt);
+    SolveGroundContact(i);
 
-    }
-	
-	i.Integrate(dt);
+    
+    
+	std::cout << "[POSITION]" << i.position << std::endl;
+
+	}
+}
+
+static void SolveGroundContact(RigidBody& i) {
     if (i.position.y - i.radius <= 0.0f)
-    {   
-        
+    {
+
         Vec2 normal(0, 1);
 
         Vec2 contactPoint = i.position - Vec2(0, i.radius);
@@ -47,7 +51,6 @@ void PhysicsWorld::Step(float dt) {
             Vec2 vPointAfter = i.velocity + Vec2(-r.y, r.x) * i.angularVelocity;
             Vec2 vRel = vPointAfter;
 
-            // Tangent direction
             Vec2 tangent = vRel - normal * vRel.Dot(normal);
 
             if (tangent.LengthSquared() > 0.0001f)
@@ -74,12 +77,6 @@ void PhysicsWorld::Step(float dt) {
 
         }
 
-        // Position correction
         i.position.y = i.radius;
     }
-    float rollingCheck = i.velocity.x - i.angularVelocity * i.radius;
-    std::cout << "Rolling error: " << rollingCheck << std::endl;
-	std::cout << "[POSITION]" << i.position << std::endl;
-
-	}
 }

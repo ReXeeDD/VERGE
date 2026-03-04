@@ -22,7 +22,8 @@ public:
 
     void SetMass(float m);
     void ApplyForce(const Vec2& force);
-    void Integrate(float dt);
+    void IntegrateVelocity(float dt);
+    void IntegratePosition(float dt);
 
     float GetMass() const;
     float GetInvMass() const;

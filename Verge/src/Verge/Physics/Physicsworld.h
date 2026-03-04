@@ -13,3 +13,4 @@ public:
 	void AddBody(const RigidBody& body);
 	void Step(float dt);
 };
+static void SolveGroundContact(RigidBody& i);

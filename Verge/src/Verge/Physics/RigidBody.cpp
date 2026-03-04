@@ -10,20 +10,26 @@ RigidBody::RigidBody(Vec2 p, Vec2 v, float m=1.0f,float radius=1.0f):position(p)
 void RigidBody::ApplyForce(const Vec2& force) {
 	forceAccum += force;
 }
-void RigidBody::Integrate(float dt) {
+void RigidBody::IntegrateVelocity(float dt) {
     // Linear
     Vec2 acceleration = forceAccum * invMass;
     velocity += acceleration * dt;
-    position += velocity * dt;
 
     // Angular
     float angularAcc = torqueAccum * invInertia;
     angularVelocity += angularAcc * dt;
-    rotation += angularVelocity * dt;
 
     forceAccum = Vec2::Zero();
     torqueAccum = 0.0f;
 }
+void RigidBody::IntegratePosition(float dt) {
+    position += velocity * dt;
+    rotation += angularVelocity * dt;
+
+
+}
+
+
 void RigidBody::SetMass(float m) {
     mass = m;
     invMass = (mass > 0.0f) ? 1.0f / mass : 0.0f;
