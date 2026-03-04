@@ -5,19 +5,34 @@ void PhysicsWorld::AddBody(const RigidBody& body) {
 	bodies.push_back(body);
 }
 void PhysicsWorld::Step(float dt) {
+    const int iterations = 12;
+    const int positionIterations = 4;
 
-	for (auto& i : bodies) {
+    for (auto& i : bodies) {
 
-	i.ApplyForce(gravity * i.mass);
-    i.IntegrateVelocity(dt);
-    i.IntegratePosition(dt);
-    SolveGroundContact(i);
+        i.ApplyForce(gravity * i.mass);
+        i.IntegrateVelocity(dt);
+    }
+
+    for (int k = 0; k < iterations; ++k) {
+        for (auto& i : bodies) {
+            SolveGroundContact(i);
+        }
+    }
+    for (auto& i : bodies) {
+        i.IntegratePosition(dt);
+	    std::cout << "[POSITION]" << i.position << std::endl;
+    }
+    for (int k = 0; k < positionIterations; ++k) {
+        for (auto& i : bodies) {
+            SolveGroundPosition(i);
+        }
+    }
 
     
     
-	std::cout << "[POSITION]" << i.position << std::endl;
 
-	}
+	
 }
 
 static void SolveGroundContact(RigidBody& i) {
@@ -77,6 +92,21 @@ static void SolveGroundContact(RigidBody& i) {
 
         }
 
-        i.position.y = i.radius;
+    }
+}
+
+static void SolveGroundPosition(RigidBody& i)
+{
+    float penetration = i.radius - i.position.y;
+
+    if (penetration > 0.0f)
+    {
+        float correctionPercent = 0.8f;   // 0.2 - 0.8 typical
+        float slop = 0.01f;               // penetration allowance
+
+        float correction = std::max(penetration - slop, 0.0f);
+        correction *= correctionPercent;
+
+        i.position.y += correction;
     }
 }

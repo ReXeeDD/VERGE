@@ -14,3 +14,4 @@ public:
 	void Step(float dt);
 };
 static void SolveGroundContact(RigidBody& i);
+static void SolveGroundPosition(RigidBody& i);
