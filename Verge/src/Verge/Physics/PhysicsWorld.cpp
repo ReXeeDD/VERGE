@@ -27,12 +27,7 @@ void PhysicsWorld::Step(float dt) {
         for (auto& i : bodies) {
             SolveGroundPosition(i);
         }
-    }
-
-    
-    
-
-	
+    }	
 }
 
 static void SolveGroundContact(RigidBody& i) {
@@ -101,8 +96,8 @@ static void SolveGroundPosition(RigidBody& i)
 
     if (penetration > 0.0f)
     {
-        float correctionPercent = 0.8f;   // 0.2 - 0.8 typical
-        float slop = 0.01f;               // penetration allowance
+        float correctionPercent = 0.8f;   
+        float slop = 0.01f;               
 
         float correction = std::max(penetration - slop, 0.0f);
         correction *= correctionPercent;
