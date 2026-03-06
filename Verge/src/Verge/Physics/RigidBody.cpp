@@ -43,7 +43,7 @@ void RigidBody::ApplyTorque(float torque)
 }
 bool CollisionManifold::hit() const{
     
-    if (distance < ((*bodyA).radius + (*bodyA).radius)) {
+    if (distance < ((*bodyA).radius + (*bodyB).radius)) {
         return true;
     }
     return false;
