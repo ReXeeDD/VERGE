@@ -12,6 +12,7 @@ private:
 public:
 	void AddBody(const RigidBody& body);
 	void Step(float dt);
+	void SolveBodyCollision();
 };
 static void SolveGroundContact(RigidBody& i);
 static void SolveGroundPosition(RigidBody& i);

@@ -29,3 +29,13 @@ public:
     float GetInvMass() const;
     void ApplyTorque(float torque);
 };
+
+struct CollisionManifold {
+    RigidBody bodyA;
+    RigidBody bodyB;
+    float distance = 0;
+
+    CollisionManifold(RigidBody& a, RigidBody& b) :bodyA(a), bodyB(b) {};
+
+    bool hit()const;
+};

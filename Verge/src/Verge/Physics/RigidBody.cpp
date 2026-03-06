@@ -41,3 +41,13 @@ void RigidBody::ApplyTorque(float torque)
 {
     torqueAccum += torque;
 }
+bool CollisionManifold::hit() const{
+    Vec2 normal;
+    normal = bodyA.position - bodyB.position;
+    float dist=normal.Length();
+    if (dist < (bodyA.radius - bodyA.radius)) {
+        
+        return true;
+    }
+
+}
