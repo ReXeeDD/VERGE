@@ -17,6 +17,7 @@ void PhysicsWorld::Step(float dt) {
     for (int k = 0; k < iterations; ++k) {
         for (auto& i : bodies) {
             SolveGroundContact(i);
+            SolveBodyCollision();
         }
     }
     for (auto& i : bodies) {
