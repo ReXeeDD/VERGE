@@ -34,8 +34,16 @@ struct CollisionManifold {
     RigidBody* bodyA;
     RigidBody* bodyB;
     float distance = 0;
+    Vec2 normal;
 
-    CollisionManifold(RigidBody& a, RigidBody& b) :bodyA(&a), bodyB(&b) {};
+    CollisionManifold(RigidBody& a, RigidBody& b) :bodyA(&a), bodyB(&b) {
+        
+        normal = (*bodyA).position - (*bodyB).position;
+        distance = normal.Length();
+    };
+    
 
     bool hit()const;
+    float penetration();
+    Vec2 Normal();
 };
