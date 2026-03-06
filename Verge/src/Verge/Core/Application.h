@@ -8,7 +8,7 @@ namespace Verge {
 		Application();
 		virtual ~Application();
 
-		void Run();
+		virtual void Run();
 	};
 
 	Application* CreateApplication();

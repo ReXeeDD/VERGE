@@ -1,8 +1,9 @@
 #pragma once
 
 #include"Vec2.h"
+#include "Verge/Core/Core.h"
 
-class RigidBody
+class VERGE_API  RigidBody
 {
 public:
     Vec2 position;
@@ -30,20 +31,23 @@ public:
     void ApplyTorque(float torque);
 };
 
-struct CollisionManifold {
+struct  CollisionManifold {
     RigidBody* bodyA;
     RigidBody* bodyB;
     float distance = 0;
     Vec2 normal;
+    float totalRadius;
+    Vec2 Normalized_Normal;
+
 
     CollisionManifold(RigidBody& a, RigidBody& b) :bodyA(&a), bodyB(&b) {
         
-        normal = (*bodyA).position - (*bodyB).position;
-        distance = normal.Length();
+        
+        totalRadius = bodyA->radius + bodyB->radius;
     };
     
 
-    bool hit()const;
+    bool hit();
     float penetration();
     Vec2 Normal();
 };

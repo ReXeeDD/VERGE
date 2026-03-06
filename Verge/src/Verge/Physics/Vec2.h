@@ -1,7 +1,9 @@
 #pragma once
 #include<ostream>
 #include <cmath>
-struct Vec2 {
+#include "Verge/Core/Core.h"
+
+struct VERGE_API Vec2 {
 	float x, y;
 
 	Vec2(float x_in=0.0f,float y_in=0.0f):x(x_in),y(y_in){}

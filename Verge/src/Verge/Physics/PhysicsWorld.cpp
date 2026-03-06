@@ -112,13 +112,43 @@ void PhysicsWorld::SolveBodyCollision(){
 
     for (size_t i = 0; i < bodies.size(); ++i) {
         for (size_t j = i + 1; j < bodies.size(); ++j) {
-            CollisionManifold c1{ bodies[i],bodies[j] };
-            if (c1.hit()) {
-
-
+            CollisionManifold manifold{ bodies[i],bodies[j] };
+            if (manifold.hit()) {
+                std::cout << "HIT!" << std::endl;
+                ResolveCollision(manifold);
             }
 
         }
     }
 
+}
+void PhysicsWorld::ResolveCollision(CollisionManifold& m) {
+    RigidBody* a = m.bodyA;
+    RigidBody* b = m.bodyB;
+
+    Vec2 relVel = a->velocity - b->velocity;
+
+    float velAlongNormal = relVel.Dot(m.Normal());
+
+    if (velAlongNormal > 0) return;
+
+    float e = a->restitution * b->restitution;
+
+    float j = -(1 + e) * velAlongNormal;
+    j /= (a->invMass + b->invMass);
+
+    Vec2 impulse = m.Normal() * j;
+
+    a->velocity += impulse * a->invMass;
+    b->velocity -= impulse * b->invMass;
+
+
+
+    const float percent = 0.8f; 
+    const float slop = 0.01f;   
+    float penetration = m.penetration();
+    Vec2 correction = m.Normal() * (std::max(penetration - slop, 0.0f) / (a->invMass + b->invMass) * percent);
+
+    a->position += correction * a->invMass;
+    b->position -= correction * b->invMass;
 }
