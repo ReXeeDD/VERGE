@@ -113,6 +113,10 @@ void PhysicsWorld::SolveBodyCollision(){
     for (size_t i = 0; i < bodies.size(); ++i) {
         for (size_t j = i + 1; j < bodies.size(); ++j) {
             CollisionManifold c1{ bodies[i],bodies[j] };
+            if (c1.hit()) {
+
+
+            }
 
         }
     }

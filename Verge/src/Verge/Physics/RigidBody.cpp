@@ -45,9 +45,9 @@ bool CollisionManifold::hit() const{
     Vec2 normal;
     normal = bodyA.position - bodyB.position;
     float dist=normal.Length();
-    if (dist < (bodyA.radius - bodyA.radius)) {
-        
+    if (dist < (bodyA.radius + bodyA.radius)) {
         return true;
     }
+    return false;
 
 }

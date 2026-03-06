@@ -31,11 +31,11 @@ public:
 };
 
 struct CollisionManifold {
-    RigidBody bodyA;
-    RigidBody bodyB;
+    RigidBody* bodyA;
+    RigidBody* bodyB;
     float distance = 0;
 
-    CollisionManifold(RigidBody& a, RigidBody& b) :bodyA(a), bodyB(b) {};
+    CollisionManifold(RigidBody& a, RigidBody& b) :bodyA(&a), bodyB(&b) {};
 
     bool hit()const;
 };
