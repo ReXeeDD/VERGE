@@ -17,9 +17,10 @@ public:
     float invInertia = 0.0f;
     float torqueAccum = 0.0f;
     float angularVelocity = 0.0f;
-    float radius=0.0f;
+    
 
-    RigidBody(Vec2 p, Vec2 v, float m, float radius);
+    RigidBody(Vec2 p, Vec2 v, float m);
+    virtual ~RigidBody() {}
 
     void SetMass(float m);
     void ApplyForce(const Vec2& force);
@@ -28,8 +29,17 @@ public:
 
     float GetMass() const;
     float GetInvMass() const;
+    virtual float GetRadius() const;
     void ApplyTorque(float torque);
 };
+class VERGE_API CircleBody : public RigidBody {
+public:
+    float radius = 0.0f;
+    CircleBody(Vec2 p, Vec2 v, float m = 1.0f, float radius = 1.0f);
+    float GetRadius() const override;
+
+};
+
 
 struct  CollisionManifold {
     RigidBody* bodyA;
@@ -40,10 +50,10 @@ struct  CollisionManifold {
     Vec2 Normalized_Normal;
 
 
-    CollisionManifold(RigidBody& a, RigidBody& b) :bodyA(&a), bodyB(&b) {
+    CollisionManifold(RigidBody* a, RigidBody* b) :bodyA(a), bodyB(b) {
         
         
-        totalRadius = bodyA->radius + bodyB->radius;
+        totalRadius = bodyA->GetRadius() + bodyB->GetRadius();
     };
     
 

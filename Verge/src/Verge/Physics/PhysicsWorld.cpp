@@ -1,7 +1,14 @@
 #include "Physicsworld.h"
 #include<iostream>
 #include<algorithm>
-void PhysicsWorld::AddBody(const RigidBody& body) {
+
+PhysicsWorld::~PhysicsWorld() {
+    for (auto body : bodies) {
+        delete body; 
+    }
+    bodies.clear();
+}
+void PhysicsWorld::AddBody(RigidBody* body) {
 	bodies.push_back(body);
 }
 void PhysicsWorld::Step(float dt) {
@@ -11,10 +18,10 @@ void PhysicsWorld::Step(float dt) {
 
     for (auto& i : bodies) {
         
-        i.ApplyForce(gravity * i.mass);
-        Vec2 dragForce = i.velocity * -drag;
-        i.ApplyForce(dragForce);
-        i.IntegrateVelocity(dt);
+        i->ApplyForce(gravity * i->mass);
+        Vec2 dragForce = i->velocity * -drag;
+        i->ApplyForce(dragForce);
+        i->IntegrateVelocity(dt);
     }
 
     for (int k = 0; k < iterations; ++k) {
@@ -24,8 +31,8 @@ void PhysicsWorld::Step(float dt) {
         }
     }
     for (auto& i : bodies) {
-        i.IntegratePosition(dt);
-	    std::cout << "[POSITION]" << i.position << std::endl;
+        i->IntegratePosition(dt);
+	    std::cout << "[POSITION]" << i->position << std::endl;
     }
     for (int k = 0; k < positionIterations; ++k) {
         for (auto& i : bodies) {
@@ -36,35 +43,35 @@ void PhysicsWorld::Step(float dt) {
     
 }
 
-static void SolveGroundContact(RigidBody& i) {
-    if (i.position.y - i.radius <= 0.0f)
+static void SolveGroundContact(RigidBody* i) {
+    if (i->position.y - i->GetRadius() <= 0.0f)
     {
 
         Vec2 normal(0, 1);
 
-        Vec2 contactPoint = i.position - Vec2(0, i.radius);
-        Vec2 r = contactPoint - i.position;
+        Vec2 contactPoint = i->position - Vec2(0, i->GetRadius());
+        Vec2 r = contactPoint - i->position;
 
-        Vec2 vPoint = i.velocity + Vec2(-r.y, r.x) * i.angularVelocity;
+        Vec2 vPoint = i->velocity + Vec2(-r.y, r.x) * i->angularVelocity;
 
         float velAlongNormal = vPoint.Dot(normal);
 
         if (velAlongNormal < 0)
         {
-            float e = i.restitution;
+            float e = i->restitution;
 
             float rn = r.Cross(normal);
-            float denom = i.invMass + (rn * rn) * i.invInertia;
+            float denom = i->invMass + (rn * rn) * i->invInertia;
 
             float j = -(1 + e) * velAlongNormal;
             j /= denom;
 
             Vec2 impulse = normal * j;
 
-            i.velocity += impulse * i.invMass;
-            i.angularVelocity += r.Cross(impulse) * i.invInertia;
+            i->velocity += impulse * i->invMass;
+            i->angularVelocity += r.Cross(impulse) * i->invInertia;
 
-            Vec2 vPointAfter = i.velocity + Vec2(-r.y, r.x) * i.angularVelocity;
+            Vec2 vPointAfter = i->velocity + Vec2(-r.y, r.x) * i->angularVelocity;
             Vec2 vRel = vPointAfter;
 
             Vec2 tangent = vRel - normal * vRel.Dot(normal);
@@ -76,7 +83,7 @@ static void SolveGroundContact(RigidBody& i) {
                 float vt = vRel.Dot(tangent);
                 float rt = r.Cross(tangent);
 
-                float denomTangent = i.invMass + (rt * rt) * i.invInertia;
+                float denomTangent = i->invMass + (rt * rt) * i->invInertia;
 
                 float jt = -vt / denomTangent;
 
@@ -87,8 +94,8 @@ static void SolveGroundContact(RigidBody& i) {
 
                 Vec2 frictionImpulse = tangent * jt;
 
-                i.velocity += frictionImpulse * i.invMass;
-                i.angularVelocity += r.Cross(frictionImpulse) * i.invInertia;
+                i->velocity += frictionImpulse * i->invMass;
+                i->angularVelocity += r.Cross(frictionImpulse) * i->invInertia;
             }
 
         }
@@ -96,9 +103,9 @@ static void SolveGroundContact(RigidBody& i) {
     }
 }
 
-static void SolveGroundPosition(RigidBody& i)
+static void SolveGroundPosition(RigidBody* i)
 {
-    float penetration = i.radius - i.position.y;
+    float penetration = i->GetRadius() - i->position.y;
 
     if (penetration > 0.0f)
     {
@@ -108,7 +115,7 @@ static void SolveGroundPosition(RigidBody& i)
         float correction = std::max(penetration - slop, 0.0f);
         correction *= correctionPercent;
 
-        i.position.y += correction;
+        i->position.y += correction;
     }
 }
 
@@ -119,20 +126,20 @@ void PhysicsWorld::SolveBodyCollision(){
             CollisionManifold manifold{ bodies[i],bodies[j] };
             if (manifold.hit()) {
                 std::cout << "HIT!" << std::endl;
-                ResolveCollision(manifold);
+                ResolveCollision(&manifold);
             }
 
         }
     }
 
 }
-void PhysicsWorld::ResolveCollision(CollisionManifold& m) {
-    RigidBody* a = m.bodyA;
-    RigidBody* b = m.bodyB;
+void PhysicsWorld::ResolveCollision(CollisionManifold* m) {
+    RigidBody* a = m->bodyA;
+    RigidBody* b = m->bodyB;
 
     Vec2 relVel = a->velocity - b->velocity;
 
-    float velAlongNormal = relVel.Dot(m.Normal());
+    float velAlongNormal = relVel.Dot(m->Normal());
 
     if (velAlongNormal > 0) return;
 
@@ -141,7 +148,7 @@ void PhysicsWorld::ResolveCollision(CollisionManifold& m) {
     float j = -(1 + e) * velAlongNormal;
     j /= (a->invMass + b->invMass);
 
-    Vec2 impulse = m.Normal() * j;
+    Vec2 impulse = m->Normal() * j;
 
     a->velocity += impulse * a->invMass;
     b->velocity -= impulse * b->invMass;
@@ -150,8 +157,8 @@ void PhysicsWorld::ResolveCollision(CollisionManifold& m) {
 
     const float percent = 0.8f; 
     const float slop = 0.01f;   
-    float penetration = m.penetration();
-    Vec2 correction = m.Normal() * (std::max(penetration - slop, 0.0f) / (a->invMass + b->invMass) * percent);
+    float penetration = m->penetration();
+    Vec2 correction = m->Normal() * (std::max(penetration - slop, 0.0f) / (a->invMass + b->invMass) * percent);
 
     a->position += correction * a->invMass;
     b->position -= correction * b->invMass;

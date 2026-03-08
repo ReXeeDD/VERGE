@@ -16,8 +16,8 @@ public:
 
         // 2. Setup Physics World
         PhysicsWorld world;
-        world.AddBody(RigidBody(Vec2(5.21f, 10.0f), Vec2(0, 0), 10.0f, 1.0f)); // Falling ball
-        world.AddBody(RigidBody(Vec2(5.2f, 2.0f), Vec2(0, 5.0f), 5.0f, 0.8f)); // Rising ball
+        world.AddBody(new CircleBody(Vec2(5.21f, 10.0f), Vec2(0, 0), 10.0f, 1.0f)); // Falling ball
+        world.AddBody(new CircleBody(Vec2(5.2f, 2.0f), Vec2(0, 5.0f), 5.0f, 0.8f)); // Rising ball
 
         const float dt = 1.0f / 60.0f;
 
@@ -42,13 +42,14 @@ public:
 
             // Draw Bodies
             // Note: You need a GetBodies() function in PhysicsWorld to make this work!
-            for (auto& body : world.GetBodies()) {
-                sf::CircleShape shape(body.radius * pixelsPerMeter);
-                shape.setOrigin(body.radius * pixelsPerMeter, body.radius * pixelsPerMeter);
+            for (auto body : world.GetBodies()) {
+                // Access radius via the pointer
+                sf::CircleShape shape(body->GetRadius() * pixelsPerMeter);
+                shape.setOrigin(body->GetRadius() * pixelsPerMeter, body->GetRadius() * pixelsPerMeter);
 
-                // Coordinate Transform: Flip Y so 0 is at bottom of screen
-                float screenX = body.position.x * pixelsPerMeter;
-                float screenY = 600.0f - (body.position.y * pixelsPerMeter);
+                // Access position via the pointer
+                float screenX = body->position.x * pixelsPerMeter;
+                float screenY = 600.0f - (body->position.y * pixelsPerMeter);
 
                 shape.setPosition(screenX, screenY);
                 shape.setFillColor(sf::Color::Cyan);
