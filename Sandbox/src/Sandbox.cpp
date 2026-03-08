@@ -17,7 +17,7 @@ public:
         // 2. Setup Physics World
         PhysicsWorld world;
         world.AddBody(new CircleBody(Vec2(5.21f, 10.0f), Vec2(0, 0), 10.0f, 1.0f)); // Falling ball
-        world.AddBody(new CircleBody(Vec2(5.2f, 2.0f), Vec2(0, 5.0f), 5.0f, 0.8f)); // Rising ball
+        world.AddBody(new SquareBody(Vec2(5.2f, 2.0f), Vec2(0, 5.0f), 5.0f, 0.8f,0.9f)); // Rising ball
 
         const float dt = 1.0f / 60.0f;
 
@@ -43,17 +43,31 @@ public:
             // Draw Bodies
             // Note: You need a GetBodies() function in PhysicsWorld to make this work!
             for (auto body : world.GetBodies()) {
-                // Access radius via the pointer
-                sf::CircleShape shape(body->GetRadius() * pixelsPerMeter);
-                shape.setOrigin(body->GetRadius() * pixelsPerMeter, body->GetRadius() * pixelsPerMeter);
-
-                // Access position via the pointer
                 float screenX = body->position.x * pixelsPerMeter;
                 float screenY = 600.0f - (body->position.y * pixelsPerMeter);
 
-                shape.setPosition(screenX, screenY);
-                shape.setFillColor(sf::Color::Cyan);
-                window.draw(shape);
+                if (body->GetType() == ShapeType::Circle) {
+                    float r = body->GetRadius() * pixelsPerMeter;
+                    sf::CircleShape shape(r);
+                    shape.setOrigin(r, r);
+                    shape.setPosition(screenX, screenY);
+                    shape.setFillColor(sf::Color::Cyan);
+                    window.draw(shape);
+                }
+                else if (body->GetType() == ShapeType::Square) {
+                    // Cast to get the rectangle dimensions
+                    SquareBody* sb = static_cast<SquareBody*>(body);
+                    sf::RectangleShape shape(sf::Vector2f(sb->length * pixelsPerMeter, sb->breadth * pixelsPerMeter));
+
+                    shape.setOrigin((sb->length * pixelsPerMeter) / 2.0f, (sb->breadth * pixelsPerMeter) / 2.0f);
+                    shape.setPosition(screenX, screenY);
+
+                    // Don't forget rotation!
+                    shape.setRotation(-sb->rotation * (180.0f / 3.14159f));
+
+                    shape.setFillColor(sf::Color::Magenta);
+                    window.draw(shape);
+                }
             }
 
             window.display();

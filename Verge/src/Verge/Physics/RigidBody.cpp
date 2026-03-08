@@ -70,3 +70,15 @@ CircleBody::CircleBody(Vec2 p, Vec2 v, float m , float radius):RigidBody(p, v, m
     invInertia = (inertia > 0) ? 1.0f / inertia : 0.0f;
 }
 float  CircleBody::GetRadius() const  { return radius; }
+
+
+SquareBody::SquareBody(Vec2 p, Vec2 v, float m , float l,float b):RigidBody(p, v, m), length(l),breadth(b) {
+    invMass = invMass = (mass > 0) ? 1.0f / mass : 0.0f;
+    inertia = (1.0f / 12.0f) * mass * (length * length + breadth * breadth);
+    invInertia = (inertia > 0) ? 1.0f / inertia : 0.0f;
+}
+float SquareBody::GetRadius() const  {
+    // Pythagorean theorem to find distance to corner
+    return 0.5f * std::sqrt(length * length + breadth * breadth);
+}
+Sq_size  SquareBody::GetSize() const { return {length,breadth}; }
