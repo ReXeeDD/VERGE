@@ -9,6 +9,7 @@ private:
 	Vec2 gravity{ 0.0f, -9.81f };
 	Vec2 force{ 5.0f, 0.0f };
 	float torque = 1.0f;
+	float drag = 1.0f;
 
 public:
 	void AddBody(const RigidBody& body);

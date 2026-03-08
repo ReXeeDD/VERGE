@@ -16,7 +16,7 @@ public:
 
         // 2. Setup Physics World
         PhysicsWorld world;
-        world.AddBody(RigidBody(Vec2(5.0f, 10.0f), Vec2(0, 0), 10.0f, 1.0f)); // Falling ball
+        world.AddBody(RigidBody(Vec2(5.21f, 10.0f), Vec2(0, 0), 10.0f, 1.0f)); // Falling ball
         world.AddBody(RigidBody(Vec2(5.2f, 2.0f), Vec2(0, 5.0f), 5.0f, 0.8f)); // Rising ball
 
         const float dt = 1.0f / 60.0f;

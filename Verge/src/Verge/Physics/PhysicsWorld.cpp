@@ -8,9 +8,12 @@ void PhysicsWorld::Step(float dt) {
     const int iterations = 12;
     const int positionIterations = 4;
 
-    for (auto& i : bodies) {
 
+    for (auto& i : bodies) {
+        
         i.ApplyForce(gravity * i.mass);
+        Vec2 dragForce = i.velocity * -drag;
+        i.ApplyForce(dragForce);
         i.IntegrateVelocity(dt);
     }
 

@@ -14,7 +14,7 @@ void RigidBody::IntegrateVelocity(float dt) {
     // Linear
     Vec2 acceleration = forceAccum * invMass;
     velocity += acceleration * dt;
-
+    
     // Angular
     float angularAcc = torqueAccum * invInertia;
     angularVelocity += angularAcc * dt;
